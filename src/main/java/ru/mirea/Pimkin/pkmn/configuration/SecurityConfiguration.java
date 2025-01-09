@@ -3,6 +3,7 @@ package ru.mirea.Pimkin.pkmn.configuration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -11,7 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.mirea.Pimkin.pkmn.security.filters.JwtAuthenticationFilter;
+import ru.mirea.Pegov.pkmn.security.filters.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -28,23 +29,18 @@ public class SecurityConfiguration {
                 customizer -> customizer
                         .requestMatchers(
                                 HttpMethod.GET,
-                                "/api/v1/cards/**",
-                                "/api/v1/students/**",
+                                "/api/v1/cards/",
+                                "/api/v1/students/",
                                 "/api/v1/cards/card-image")
                         .permitAll()
-
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/v1/cards",
                                 "/api/v1/students")
                         .hasRole("ADMIN")
-
                         .requestMatchers("/auth/login").permitAll()
-
-                        .requestMatchers("/auth/**").authenticated()
-
-                        .requestMatchers("/login", "/css/**", "/js/**").permitAll()
-
+                        .requestMatchers("/auth/").authenticated()
+                        .requestMatchers("/login", "/css/", "/js/**").permitAll()
                         .anyRequest().authenticated()
         );
         http.formLogin(form -> form.successForwardUrl("/auth/success"));
